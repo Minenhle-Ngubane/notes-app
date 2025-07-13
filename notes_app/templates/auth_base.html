@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+    <title>Sign In</title>
+    <link href="{% static 'layouts/css/light/loader.css' %}" rel="stylesheet" type="text/css" />
+    <script src="{% static 'layouts/loader.js' %}"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/light/elements/alert.css' %}" rel="stylesheet" type="text/css" >
+    <link href="{% static 'layouts/css/light/plugins.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/light/authentication/auth-boxed.css' %}" rel="stylesheet" type="text/css" />
+</head>
+<body class="form">
+    {% include "partials/loader.html" %}
+    <div class="auth-container d-flex">
+        <div class="container mx-auto align-self-center">
+            <div class="row">
+                <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-8 col-12 d-flex flex-column align-self-center mx-auto">
+                    <div class="card mt-3 mb-3">
+                        <div class="card-body">
+                            {% block content %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/forms/bootstrap_validation/bs_validation_script.js' %}"></script>
+</body>
+</html>

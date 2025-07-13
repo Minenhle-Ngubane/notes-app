@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+        <title>Empty Page | CORK - Multipurpose Bootstrap Dashboard Template </title>
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/img/favicon.ico' %}"/>
+        <script src="{% static "assets/js/htmx.min.js" %}"></script>
+        <script src="{% static "assets/js/response-targets.js" %}"></script>
+        {% include "partials/global_css.html" %}
+        {% block extra_css %}{% endblock %}
+    </head>
+    <body class="layout-boxed">
+        {% include "partials/loader.html" %}
+        {% include "partials/navbar.html" %}
+        <div class="main-container " id="container">
+            {% include "partials/sidebar.html" %}
+            <div id="content" class="main-content">
+                <div class="layout-px-spacing">
+                    <div class="middle-content container-xxl p-0">
+                        <div class="row layout-top-spacing">
+                            {% include "partials/alert.html" %}
+                            <div class="col-md-12">
+                                {% block content %}{% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% include "partials/footer.html" %}
+            </div>
+        </div>
+        {% include "partials/global_js.html" %}
+        {% block extra_js %}{% endblock %}
+    </body>
+</html>

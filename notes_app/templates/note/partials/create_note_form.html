@@ -1,0 +1,44 @@
+<form
+    hx-post="{% url 'note:note_create' %}"
+    hx-target-201="#note-list"
+    hx-target-400="#note-create-form"
+    hx-swap-201="innerHTML"
+    hx-swap-400="innerHTML"
+    hx-on::after-request="handleNoteCreation(event)"
+    method="post"
+    novalidate
+    id="create-note-form"
+>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex note-title">
+                {{ form.title }}
+            </div>
+            {% if form.title.errors %}
+                <span class="d-block mt-1 invalid-feedback">
+                    {{ form.title.errors|join:", " }}
+                </span>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-12">
+            <div class="d-flex note-description">
+                {{ form.description }}
+            </div>
+            {% if form.description.errors %}
+                <span class="d-block mt-1 invalid-feedback">
+                    {{ form.description.errors|join:", " }}
+                </span>
+            {% endif %}
+        </div>
+        
+        {% if form.non_field_errors %}
+            <div class="col-md-12">
+                <div class="alert alert-danger mt-2">
+                    {{ form.non_field_errors|join:", " }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</form>

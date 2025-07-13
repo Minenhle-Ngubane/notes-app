@@ -1,0 +1,61 @@
+<form
+    hx-post="/notes/{{note.id}}/edit/"
+    hx-target-201="[data-note-id='{{note.id}}']"
+    hx-target-400="#note-edit-form"
+    hx-swap="innerHTML"
+    hx-on::after-request="handleNoteEdit(event)"
+    method="post"
+    novalidate
+    id="form-{{note.id}}"
+>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex note-title">
+                <input 
+                    type="text" 
+                    name="title" 
+                    maxlength="255"
+                    class="form-control"  
+                    placeholder="e.g., Grocery List"
+                    aria-describedby="id_title_helptext" 
+                    id="id_title"
+                    value="{{note.title}}"
+                    required
+                >
+            </div>
+            {% if form.title.errors %}
+                <span class="d-block mt-1 invalid-feedback">
+                    {{ form.title.errors|join:", " }}
+                </span>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-12">
+            <div class="d-flex note-description">
+                <textarea 
+                    name="description" 
+                    cols="40" 
+                    rows="5" 
+                    class="form-control" 
+                    placeholder="Write your note here..." 
+                    aria-describedby="id_description_helptext"
+                    id="id_description"
+                >{{note.description}}</textarea>
+            </div>
+            {% if form.description.errors %}
+                <span class="d-block mt-1 invalid-feedback">
+                    {{ form.description.errors|join:", " }}
+                </span>
+            {% endif %}
+        </div>
+        
+        {% if form.non_field_errors %}
+            <div class="col-md-12">
+                <div class="alert alert-danger mt-2">
+                    {{ form.non_field_errors|join:", " }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</form>
