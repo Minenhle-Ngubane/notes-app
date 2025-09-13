@@ -1,5 +1,15 @@
 <div id="note-list" class="note-container note-grid">
-    {% for note in notes %}
-        {% include "note/partials/note_item.html" %}
-    {% endfor %}
+    {% if notes|length > 0 %}
+        {% for note in notes %}
+            {% include "note/partials/note_item.html" %}
+        {% endfor %}
+    {% else %}
+        <h6 class="w-100 text-center mt-5">
+            {% if no_results_message %}
+                {{ no_results_message }}
+            {% else %}
+                You have no notes yet. Add your first note now
+            {% endif %}
+        </h6>
+    {% endif %}
 </div>

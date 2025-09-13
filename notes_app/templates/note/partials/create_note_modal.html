@@ -15,19 +15,24 @@
             <div class="modal-body">
                 <div class="notes-box">
                     <div class="notes-content" id="note-create-form">  
-                        {% include "note/partials/create_note_form.html" %}
+                        {% include "note/partials/create_note_form.html" with form=form %}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button 
-                    onclick="submitForm('create-note-form')"
+                    hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+                    hx-post="{% url 'note:note_create' %}"
+                    hx-include="#create-note-form"
+                    hx-trigger="click"
+                    hx-on::after-request="handleNoteCreation(event)"
+
                     class="float-left btn btn-primary"
                 >
                     Save
                 </button>
                 <button 
-                    onclick="onDiscardModal('{{ note.id }}')" 
+                    onclick="resetForm('create-note-form')" 
                     class="btn" 
                     id="discard-note-button" 
                     data-bs-dismiss="modal"

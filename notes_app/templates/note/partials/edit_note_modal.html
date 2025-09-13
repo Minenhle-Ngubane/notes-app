@@ -1,4 +1,9 @@
-<div class="modal fade" id="edit-note-modal-{{note.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+<div 
+    id="edit-note-modal-{{note.id}}"
+    class="modal fade"  
+    tabindex="-1" 
+    aria-hidden="false" 
+>
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,19 +11,27 @@
                     Edit Note
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="notes-box">
-                    <div class="notes-content" id="note-edit-form-{{note.id}}">  
+                    <div class="notes-content">
                         {% include "note/partials/edit_note_form.html" %}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button 
-                    onclick="submitForm('form-{{note.id}}')"
+                    hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+                    hx-post="{% url 'note:note_edit' note.id %}"
+                    hx-include="#edit-note-form-{{note.id}}"
+                    hx-trigger="click"
+                    hx-on::after-request="handleNoteEdit(event)"
+
                     class="float-left btn btn-primary"
                 >
                     Save

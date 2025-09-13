@@ -5,10 +5,13 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
-        <title>Empty Page | CORK - Multipurpose Bootstrap Dashboard Template </title>
         <link rel="icon" type="image/x-icon" href="{% static 'assets/img/favicon.ico' %}"/>
         <script src="{% static "assets/js/htmx.min.js" %}"></script>
-        <script src="{% static "assets/js/response-targets.js" %}"></script>
+
+
+        <title>
+            {% block title %}{% endblock %} | Notes App
+        </title>
         {% include "partials/global_css.html" %}
         {% block extra_css %}{% endblock %}
     </head>
@@ -22,9 +25,7 @@
                     <div class="middle-content container-xxl p-0">
                         <div class="row layout-top-spacing">
                             {% include "partials/alert.html" %}
-                            <div class="col-md-12">
-                                {% block content %}{% endblock %}
-                            </div>
+                            {% block content %}{% endblock %}
                         </div>
                     </div>
                 </div>

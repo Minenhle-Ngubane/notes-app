@@ -1,15 +1,7 @@
 <form
-    hx-post="{% url 'note:note_create' %}"
-    hx-target-201="#note-list"
-    hx-target-400="#note-create-form"
-    hx-swap-201="innerHTML"
-    hx-swap-400="innerHTML"
-    hx-on::after-request="handleNoteCreation(event)"
-    method="post"
-    novalidate
     id="create-note-form"
+    novalidate
 >
-    {% csrf_token %}
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex note-title">

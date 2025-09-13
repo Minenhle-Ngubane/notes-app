@@ -3,7 +3,15 @@
         <div class="col-md-12 col-sm-12 col-12 mb-5">
             <ul class="nav nav-pills d-block" id="pills-tab3" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link list-actions active" id="all-notes" onclick="getFavouriteNotes('all')">
+                    <a 
+                        hx-get="{% url 'note:note_favorite_list' 0 %}"
+                        hx-target="#note-list"
+                        hx-trigger="click"
+                        hx-on::after-request="toggleActiveClass(false)"
+
+                        id="all-notes"
+                        class="nav-link list-actions active" 
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -12,7 +20,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link list-actions" id="note-fav" onclick="getFavouriteNotes()">
+                    <a 
+                        hx-get="{% url 'note:note_favorite_list' 1 %}"
+                        hx-target="#note-list"
+                        hx-trigger="click"
+                        hx-on::after-request="toggleActiveClass(true)"
+
+                        id="note-fav" 
+                        class="nav-link list-actions"
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                         </svg> 
@@ -22,7 +38,30 @@
             </ul>
         </div>
         <div class="col-md-12 col-sm-12 col-12 text-center">
-            <button onclick="openModal()" class="btn btn-secondary w-100">Add Note</button>
+            <button 
+                data-bs-toggle="modal"
+                data-bs-target="#add-note-modal"
+                class="btn btn-secondary w-100"
+            >
+            Add Note
+        </button>
         </div>
     </div>
 </div>
+
+{% block extra_js %}
+    <script>
+        const toggleActiveClass = (isFavourite) => {
+            const allNotesLink = document.getElementById("all-notes");
+            const favNotesLink = document.getElementById("note-fav");
+
+            if(isFavourite) {
+                favNotesLink.classList.add("active");
+                allNotesLink.classList.remove("active");
+            } else {
+                favNotesLink.classList.remove("active");
+                allNotesLink.classList.add("active");
+            }   
+        }
+    </script>
+{% endblock %}

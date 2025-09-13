@@ -1,18 +1,54 @@
 {% load humanize %}
-<div hx-retarget="#{{note.id}}" hx-reswap="outerHTML" id="{{note.id}}" data-note-id="{{note.id}}" class="note-item all-notes note-social {% if note.is_favourite %}note-fav{% endif %}">
+<div 
+    id="note-{{note.id}}" 
+    class="note-item all-notes note-social {% if note.is_favourite %}note-fav{% endif %}"
+>
     <div class="note-inner-content">
         <div class="note-content">
-            <p class="note-title" data-noteTitle="{{ note.title }}">{{ note.title}}</p>
-            <p class="meta-time">{{ note.updated_at|naturaltime }}</p>
+            <p class="note-title" data-noteTitle="{{ note.title }}">
+                {{ note.title}}
+            </p>
+            <p class="meta-time">
+                {{ note.updated_at|naturaltime }}
+            </p>
             <div class="note-description-content">
-                <p class="note-description" data-noteDescription="{{note.description}}">{{note.description}}</p>
+                <p class="note-description" data-noteDescription="{{note.description}}">
+                    {{note.description}}
+                </p>
             </div>
         </div>
         <div class="note-action">
-            <svg onclick="favoriteNoteToggle('{{ note.id }}')" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star fav-note">
+            <svg 
+                hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+                hx-post="{% url 'note:note_favorite_toggle' note.id %}"
+                hx-target="#note-{{note.id}}"
+                hx-swap="outerHTML"
+                hx-trigger="click"
+                
+                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star fav-note">
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
             </svg>
-            <svg onclick="deleteNote('{{ note.id }}')" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 delete-note">
+            <svg 
+                hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+                hx-post="{% url 'note:note_delete' note.id %}"
+                hx-trigger="confirmed"
+                hx-target="#note-list"
+                hx-on::after-request="handleNoteDeletion(event)"
+
+                onclick="Swal.fire({
+                            title: 'Are you sure?',
+                            text: 'You wont be able to revert this!',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, delete it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                htmx.trigger(this, 'confirmed')
+                            }
+                        });" 
+                
+                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 delete-note">
                 <polyline points="3 6 5 6 21 6"></polyline>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                 <line x1="10" y1="11" x2="10" y2="17"></line>
@@ -21,7 +57,25 @@
         </div>
 
         <div class="note-footer">
-            <svg onclick="openModal('{{ note.id }}')" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 edit" style="padding: 4px; border-radius: 5px; cursor: pointer; color: #607d8b; width: 28px; height: 28px; stroke-width: 1.6;">
+            <svg
+                hx-get="{% url 'note:note_edit' note.id %}"
+                hx-target="#edit-note-form-{{note.id}}"
+                hx-trigger="click"
+
+                data-bs-toggle="modal"
+                data-bs-target="#edit-note-modal-{{note.id}}"
+
+                xmlns="http://www.w3.org/2000/svg" 
+                width="24" height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                class="feather feather-edit-2 edit" 
+                style="padding: 4px; border-radius: 5px; cursor: pointer; color: #607d8b; width: 28px; height: 28px; stroke-width: 1.6;"
+            >
                 <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
             </svg>
         </div>
