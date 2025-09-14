@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block extra_css %}
+    <style>
+        .avatar-upload {
+            position: relative;
+            max-width: 300px;
+            margin: 0px auto;
+        }
+
+        .avatar-edit {
+            position: relative;
+            z-index: 1;
+            top: 108px;
+            input {
+                display: none;
+            }
+        }
+
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            border-radius: 100%;
+            border: 6px solid #F8F8F8;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+            > div {
+                width: 100%;
+                height: 100%;
+                border-radius: 100%;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    {% include "accounts/user_form.html" %}
+{% endblock %}
+
+
+{% block extra_js %}
+    <script>
+        const readURL = () => {
+            const input = document.getElementById("id_avatar");
+            const file = input.files[0];
+
+            const errorEl = document.getElementById("avatar-error");
+            errorEl.textContent = ""; // clear old errors
+
+            if (file) {
+                // Allowed formats
+                const validFormats = ["image/jpeg", "image/jpg", "image/png"];
+
+                // 2 MB = 1024 * 1024
+                const maxSize = 2 * 1024 * 1024;
+
+                // Validate format
+                if (!validFormats.includes(file.type)) {
+                    errorEl.textContent = "Only JPG and PNG formats are allowed.";
+                    input.value = ""; // reset file input
+                    return;
+                }
+
+                // Validate size
+                if (file.size > maxSize) {
+                    errorEl.textContent = "Image file size cannot exceed 2MB";
+                    input.value = ""; // reset file input
+                    return;
+                }
+
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imagePreview = document.getElementById("imagePreview");
+                    imagePreview.style.backgroundImage = `url(${e.target.result})`;
+                    imagePreview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // bind directly to the input by ID
+        document.getElementById("id_avatar").addEventListener("change", readURL);
+
+
+        // Handle user update
+        const handleUserUpdate = (event) => {
+            const xhr = event.detail.xhr;
+
+            // Only run if the request returned 204
+            if (xhr.status === 204) {
+                // Get the HX-Trigger header
+                const triggerHeader = xhr.getResponseHeader("HX-Trigger");
+
+                if (triggerHeader) {
+                    try {
+                        const triggers = JSON.parse(triggerHeader);
+                        const message = triggers.userUpdated.message;
+                        
+                        if (message) {
+                            // Show the message
+                            Snackbar.show({
+                                showAction: false,
+                                text: message, 
+                                pos: "top-right",
+                                actionTextColor: "#fff",
+                                backgroundColor: "#00ab55"
+                            });
+                        }
+
+                        // Update rendered user avatar on the navbar
+                        const input = document.getElementById("id_avatar");
+                        const file = input.files[0];
+
+                        if (file) {
+                            const reader = new FileReader();
+                            
+                            reader.onload = (e) => {
+                                const userProfile = document.getElementById("userProfile");
+                                userProfile.src = e.target.result;
+                            };
+                            
+                            reader.readAsDataURL(file);
+                        }
+                    } catch (error) {
+                        Snackbar.show({
+                            showAction: false,
+                            text: error, 
+                            pos: "top-right",
+                            actionTextColor: "#fff",
+                            backgroundColor: "#e7515a"
+                        });
+                    }
+                }
+            }
+
+            if (message) {
+                Snackbar.show({
+                    showAction: false,
+                    text: message, 
+                    pos: "top-right",
+                    actionTextColor: "#fff",
+                    backgroundColor: "#00ab55"
+                });
+            }
+        };
+    </script>
+{% endblock %}

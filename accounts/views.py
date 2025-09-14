@@ -1,16 +1,21 @@
-from django.shortcuts import render, redirect
+import json
+
+from django.views import View
+from django.db import transaction
 from django.contrib import messages
-from django.contrib.auth import login
-from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.urls import reverse_lazy
+from django.http import HttpResponse
+from django.contrib.auth import login
+from django.views.generic import CreateView
+from django.shortcuts import render, redirect
+from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
-from django.utils.decorators import method_decorator
-from django.views.generic import CreateView
-from django.db import transaction
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView as DjangoLoginView
 
-from .forms import UserCreationForm, AuthenticationForm
+from .forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from .models import User
 
 
@@ -69,3 +74,48 @@ class LoginView(DjangoLoginView):
     form_class = AuthenticationForm
     template_name = "accounts/login.html"
     redirect_authenticated_user = True
+   
+    
+class UpdateUserView(LoginRequiredMixin, View):
+    """
+    Allow a logged-in user to update their profile.
+    """
+    
+    def get(self, request):
+        form = UserChangeForm(instance=request.user)
+        
+        title = f"{request.user.first_name}'s profile update" if request.user.first_name else _("Update your profile")
+
+        return render(
+            request,
+            "accounts/user_update_page.html",
+            {
+                "form": form,
+                "title": title
+            }
+        )
+        
+    def post(self, request):
+        form = UserChangeForm(request.POST, request.FILES, instance=request.user)
+        
+        if form.is_valid():
+            form.save()
+            message = _("Profile updated successfully.")
+
+            response = HttpResponse(status=204)  # No Content
+            response["HX-Trigger"] = json.dumps({
+                "userUpdated": {
+                    "message": str(message),
+                }
+            })
+            return response
+        
+        response = render(
+            request,
+            "accounts/user_form.html",
+            {
+                "form": form,
+            }
+        )
+        
+        return response

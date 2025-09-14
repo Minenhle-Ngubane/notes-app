@@ -50,4 +50,8 @@ class UserChangeForm(DjangoUserChangeForm):
 
     class Meta:
         model = User
-        fields = ("email",)
+        fields = ("email", "avatar", "first_name", "last_name",)
+        
+        widgets = {
+            "avatar": forms.FileInput,
+        }

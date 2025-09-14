@@ -16,7 +16,6 @@ class UserAdmin(BaseUserAdmin):
         "email",
         "first_name",
         "last_name",
-        "gender",
         "is_staff",
         "is_active",
         "date_joined",
@@ -24,7 +23,6 @@ class UserAdmin(BaseUserAdmin):
     list_filter = (
         "is_staff",
         "is_active",
-        "gender",
     )
     search_fields = ("email", "first_name", "last_name")
     ordering = ("-date_joined",)
@@ -34,8 +32,7 @@ class UserAdmin(BaseUserAdmin):
         (_("Personal Info"), {
             "fields": (
                 "first_name", 
-                "last_name", 
-                "gender", 
+                "last_name",  
                 "avatar",
             )
         }),
@@ -61,7 +58,6 @@ class UserAdmin(BaseUserAdmin):
                     "last_name",
                     "password1",
                     "password2",
-                    "gender",
                     "avatar",
                     "is_staff",
                     "is_active",

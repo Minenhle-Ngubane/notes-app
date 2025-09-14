@@ -1,0 +1,109 @@
+{% load static widget_tweaks %}
+<form
+    hx-post="{% url 'accounts:update' %}"
+    hx-target="#update-user-form"
+    hx-swap="outerHTML"
+    hx-on::after-request="handleUserUpdate(event)"
+
+    id="update-user-form"
+    enctype="multipart/form-data"
+    novalidate
+>
+    {% csrf_token %}
+    <div class="col-xl-12 col-lg-12 col-md-12 layout-spacing">
+        <div class="section general-info">
+            <div class="info">
+                <h6 class="">Update Profile</h6>
+                <div class="row">
+                    <div class="col-lg-11 mx-auto">
+                        <div class="row">
+                            <div class="col-xl-2 col-lg-12 col-md-4">
+                                <div class="mt-0 pe-md-4 d-flex flex-column" style="align-items: center; margin-top: -50px !important">
+                                    <div class="avatar-edit">
+                                        {{ form.avatar }}
+                                        <label for="id_avatar" class="btn btn-primary btn-sm btn-icon btn-rounded">
+                                            <svg xmlns="http://www.w3.org/2000/svg" style="width: 15px !important; height: 15px !important" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+                                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                            </svg>
+                                        </label>
+                                    </div>
+                                    <div class="avatar-preview">
+                                        {% if request.user.avatar %}
+                                            <div id="imagePreview" style="background-image: url({{ request.user.avatar.url }});"></div>
+                                        {% else %}
+                                            <div id="imagePreview" style="background-image: url({% static 'assets/img/user-placeholder.jpeg' %});"></div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <small class="text-danger text-center d-block" id="avatar-error">
+                                    {% if form.avatar.errors %}
+                                        {% for error in form.avatar.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    {% endif %}
+                                </small>
+                            </div>
+                            <div class="col-xl-10 col-lg-12 col-md-8 mt-md-0 mt-4">
+                                <div class="form">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-4">
+                                                <label for="id_email">Email</label>
+                                                {% if form.email.errors %}
+                                                    {% render_field form.email class="form-control mb-1 is-invalid" placeholder="Email Address" %}
+                                                    <div class="d-block invalid-feedback">
+                                                        {{ form.email.errors|join:", " }}
+                                                    </div>
+                                                {% else %}
+                                                    {% render_field form.email class="form-control mb-1" placeholder="Email Address" %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group mb-4">
+                                                <label for="id_first_name">First Name</label>
+                                                {% if form.first_name.errors %}
+                                                    {% render_field form.first_name class="form-control mb-1 is-invalid" placeholder="First Name" %}
+                                                    <div class="d-block invalid-feedback">
+                                                        {{ form.first_name.errors|join:", " }}
+                                                    </div>
+                                                {% else %}
+                                                    {% render_field form.first_name class="form-control mb-1" placeholder="First Name" %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group mb-4">
+                                                <label for="id_last_name">Last Name</label>
+                                                {% if form.last_name.errors %}
+                                                    {% render_field form.last_name class="form-control mb-1 is-invalid" %}
+                                                    <div class="d-block invalid-feedback">
+                                                        {{ form.last_name.errors|join:", " }}
+                                                    </div>
+                                                {% else %}
+                                                    {% render_field form.last_name class="form-control mb-1" %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 mt-1">
+                                            <div class="form-group text-end">
+                                                <button 
+                                                    type="submit"
+                                                    class="btn btn-primary"
+                                                >
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

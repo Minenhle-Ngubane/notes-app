@@ -13,12 +13,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     Custom User model where email is the unique identifier.
     """
     
-    GENDER_CHOICES = [
-        ("M", _("Male")),
-        ("F", _("Female")),
-    ]
-
-
     email = models.EmailField(
         _("email address"), 
         unique=True, 
@@ -35,14 +29,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("last name"), 
         max_length=30, 
         blank=True
-    )
-    
-    gender = models.CharField(
-        _("gender"),
-        max_length=2,
-        choices=GENDER_CHOICES,
-        blank=True,
-        help_text=_("User's gender."),
     )
     
     is_staff = models.BooleanField(
