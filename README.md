@@ -1,5 +1,7 @@
 # 🗒️ Django Notes App (Demo Project)
 
+![Notes App Demo](demo.gif)
+
 A demo **note-taking application** built with **Django, HTMX, and Bootstrap**.  
 This project showcases full CRUD functionality, authentication, profile management, search, filtering, and server-driven interactivity.  
 
