@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "accounts",
     "dashboard",
     "note",
+    "landing",
     
     # 3rd Part
     'widget_tweaks',

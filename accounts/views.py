@@ -5,7 +5,7 @@ from django.db import transaction
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import HttpResponse
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.views.generic import CreateView
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
@@ -74,6 +74,20 @@ class LoginView(DjangoLoginView):
     form_class = AuthenticationForm
     template_name = "accounts/login.html"
     redirect_authenticated_user = True
+    
+    
+class LogoutView(LoginRequiredMixin, View):
+    """
+    Logs out the user and redirects to home.
+    Uses HTMX-friendly redirect header.
+    """
+
+    def post(self, request, *args, **kwargs):
+        logout(request)
+
+        response = HttpResponse(status=200)
+        response["HX-Redirect"] = "/"
+        return response
    
     
 class UpdateUserView(LoginRequiredMixin, View):
